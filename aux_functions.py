@@ -8,7 +8,7 @@ L2F members for explainations.
 import numpy as np
 from nltk import ngrams
 
-terminal_chars = ['n', 'w', 'd', 'x', 'g', 'e', '!', '#', '@']
+error_chars = ['n', 'w', 'd', 'x', 'g', 'e', '!', '#', '@']
 
 
 def is_win(prompt):
@@ -17,9 +17,9 @@ def is_win(prompt):
         return 1
     elif '*' in prompt:
         return 0
-    if prompt[0] in terminal_chars:
+    if prompt[0] in error_chars:
         return 0
-    elif prompt[-1] in terminal_chars:
+    elif prompt[-1] in error_chars:
         return 1
     return -1   # Neither won nor lost
 
