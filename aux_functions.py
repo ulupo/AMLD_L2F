@@ -28,31 +28,25 @@ def aux_fn(df, poss_prompts, all_shots):
     # Build 3-grams of sequential shots for player (p) and opponent (o)
 
     # In this list we add all the triples of consequent shots: the first shot
-    # is always RN shot, followed by RF shot and then by a RN shot.
+    # is always a RN shot, followed by a RF shot and then by a RN shot.
     shots_opo = []
 
     for i in range(len(df)):
-        shots = df['Shots'].iloc[i]
+        shots, outcome = df['Shots'].iloc[i], df['Outcome'].iloc[i]
         length = len(shots.split())
         server = df['Server'].iloc[i]
 
         if server == 1:
-            if length % 2 == 0:
-                z = ''
-            else:
-                z = ' '
+        	z = '' if length % 2 == 0 else ' '
             # 'X' for waiting to receive serve
-            sentence = 'X ' + df['Shots'].iloc[i] + z + df['Outcome'].iloc[i]
+            sentence = 'X ' + shots + z + outcome
             n_grams = list(ngrams(sentence.split(), 3))
             shots_opo.extend(n_grams[0::2])
 
         if server == 0:
-            if length % 2 == 0:
-                z = ' '
-            else:
-                z = ''
+            z = ' ' if length % 2 == 0 else ''
             # 'X' for waiting to receive serve
-            sentence = 'X ' + df['Shots'].iloc[i] + z + df['Outcome'].iloc[i]
+            sentence = 'X ' + shots + z + outcome
             n_grams = list(ngrams(sentence.split(), 3))
             shots_opo.extend(n_grams[1::2])
 
@@ -67,11 +61,11 @@ def aux_fn(df, poss_prompts, all_shots):
 
     for i in range(len(poss_prompts)):
         for j in range(len(all_shots)):
-            distribution_of_shots = [
+            shots_distrib = [
                 n_gram[2] for n_gram in shots_opo_com
                 if n_gram[0] == poss_prompts[i] and n_gram[1] == all_shots[j]
             ]
-            model_matrix.append(distribution_of_shots)
+            model_matrix.append(shots_distrib)
 
     Model = np.asarray(model_matrix).reshape((len(poss_prompts), len(all_shots)))
 
