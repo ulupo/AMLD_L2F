@@ -37,7 +37,7 @@ def aux_fn(df, poss_prompts, all_shots):
         server = df['Server'].iloc[i]
 
         if server == 1:
-        	z = '' if length % 2 == 0 else ' '
+            z = '' if length % 2 == 0 else ' '
             # 'X' for waiting to receive serve
             sentence = 'X ' + shots + z + outcome
             n_grams = list(ngrams(sentence.split(), 3))
